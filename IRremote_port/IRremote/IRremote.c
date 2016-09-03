@@ -24,6 +24,8 @@
 #	include "IRremoteInt.h"
 #undef IR_GLOBAL
 
+#include "stm32f4xx_hal_tim.h"
+
 //+=============================================================================
 // The match functions were (apparently) originally MACROs to improve code speed
 //   (although this would have bloated the code) hence the names being CAPS
@@ -114,7 +116,7 @@ int IR_MATCH_SPACE (int measured_ticks,  int desired_us)
 
 //+=============================================================================
 // Interrupt Service Routine - Fires every 50uS
-// TIMER2 interrupt code to collect raw data.
+// TIM2 interrupt code to collect raw data.
 // Widths of alternating SPACE, MARK are recorded in rawbuf.
 // Recorded in ticks of 50uS [microseconds, 0.000050 seconds]
 // 'rawlen' counts the number of entries recorded so far.
@@ -127,8 +129,6 @@ int IR_MATCH_SPACE (int measured_ticks,  int desired_us)
 
 void IR_ISR ()
 {
-	IR_TIMER_RESET;
-
 	// Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
 	uint8_t irdata = (uint8_t)HAL_GPIO_ReadPin(irparams.recvpinport, irparams.recvpin);
 
@@ -201,5 +201,13 @@ void IR_ISR ()
 			if (irparams.blinkpin) HAL_GPIO_WritePin(irparams.blinkpinport, irparams.blinkpin, GPIO_PIN_SET); // Turn user defined pin LED on
 		}
 		else if (irparams.blinkpin) HAL_GPIO_WritePin(irparams.blinkpinport, irparams.blinkpin, GPIO_PIN_RESET); // Turn user defined pin LED on
+	}
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if(htim->Instance==TIM2)
+	{
+		IR_ISR();
 	}
 }

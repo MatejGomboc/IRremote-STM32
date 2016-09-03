@@ -74,16 +74,16 @@ void IRrecv_IRrecvInitBlink (GPIO_TypeDef* recvpinport, uint16_t recvpin, GPIO_T
 void  IRrecv_enableIRIn()
 {
 	// Setup pulse clock timer interrupt
-	// Prescale /8 (16M/8 = 0.5 microseconds per tick)
+	// Prescale /50 (100M/50 = 0.5 microseconds per tick)
 	// Therefore, the timer interval can range from 0.5 to 128 microseconds
-	// Depending on the reset value (255 to 0)
+	// Depending on the reset value (255 to 0), current value = 50us
 
 	TIM_HandleTypeDef htim2;
 	htim2.Instance = TIM2;
-	htim2.Init.Prescaler = 1000;
+	htim2.Init.Prescaler = 50;
 	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim2.Init.Period = 1000;
-	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV2;
+	htim2.Init.Period = 100;
+	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
 	{
 		Error_Handler();
@@ -95,12 +95,12 @@ void  IRrecv_enableIRIn()
 		Error_Handler();
 	}
 
-	/* TIM4 clock enable */
-	__HAL_RCC_TIM9_CLK_ENABLE();
+	/* TIM2 clock enable */
+	__HAL_RCC_TIM2_CLK_ENABLE();
 
-	/* TIM4 interrupt init */
-	HAL_NVIC_SetPriority(TIM1_BRK_TIM2_IRQn, 2, 0);
-	HAL_NVIC_EnableIRQ(TIM1_BRK_TIM2_IRQn);
+	/* TIM2 interrupt init */
+	HAL_NVIC_SetPriority(TIM2_IRQn, 2, 0);
+	HAL_NVIC_EnableIRQ(TIM2_IRQn);
 	if(HAL_TIM_Base_Start_IT(&htim2) != HAL_OK)
 	{
 		Error_Handler();

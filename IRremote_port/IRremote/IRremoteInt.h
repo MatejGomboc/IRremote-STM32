@@ -70,17 +70,6 @@ IR_EXTERN volatile irparams_t irparams;
 //#	define SYSCLOCK  16000000  // main Arduino clock
 //#endif
 
-////------------------------------------------------------------------------------
-//// Defines for setting and clearing register bits
-////
-//#ifndef cbi
-//#	define cbi(sfr, bit)  (_SFR_BYTE(sfr) &= ~_BV(bit))
-//#endif
-//
-//#ifndef sbi
-//#	define sbi(sfr, bit)  (_SFR_BYTE(sfr) |= _BV(bit))
-//#endif
-
 //------------------------------------------------------------------------------
 // Pulse parms are ((X*50)-100) for the Mark and ((X*50)+100) for the Space.
 // First MARK is the one after the long gap

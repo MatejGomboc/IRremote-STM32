@@ -25,7 +25,9 @@ IRremote/IRremote.o: ../IRremote/IRremote.c ../IRremote/IRremote.h \
  C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
  C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
  C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+ C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 
 ../IRremote/IRremote.h:
 
@@ -82,3 +84,7 @@ C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Drive
 C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h:
 
 C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
+
+C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
+
+C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
