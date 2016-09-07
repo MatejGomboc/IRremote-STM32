@@ -3,10 +3,10 @@
 #include "stm32f4xx_hal_tim.h"
 
 //+=============================================================================
-void IRsend_sendRaw (const unsigned int buf[], unsigned int len, unsigned int hz)
+void IRsend_sendRaw (const unsigned int buf[], unsigned int len, unsigned int khz)
 {
 	// Set IR carrier frequency
-	IRsend_enableIROut(hz);
+	IRsend_enableIROut(khz);
 
 	for (unsigned int i = 0;  i < len;  i++)
 	{
@@ -24,7 +24,7 @@ void IRsend_sendRaw (const unsigned int buf[], unsigned int len, unsigned int hz
 void  IRsend_mark (unsigned int time)
 {
 	TIM_HandleTypeDef htim4;
-	HAL_TIM_OC_Start(&htim4, TIM_CHANNEL_1); // Enable pin 3 PWM output
+	HAL_TIM_OC_Start(&htim4, TIM_CHANNEL_1); // Enable PWM output
 	if (time > 0) IRsend_custom_delay_usec(time);
 }
 
@@ -49,30 +49,18 @@ void  IRsend_space (unsigned int time)
 // controlling the duty cycle.
 // There is no prescaling, so the output frequency is 16MHz / (2 * OCR2A)
 // To turn the output on and off, we leave the PWM running, but connect and disconnect the output pin.
-// A few hours staring at the ATmega documentation and this will all make sense.
-// See my Secrets of Arduino PWM at http://arcfn.com/2009/07/secrets-of-arduino-pwm.html for details.
 //
 void  IRsend_enableIROut (int khz)
 {
-	// Disable the TIM4 Interrupt (which is used for receiving IR)
-	HAL_NVIC_DisableIRQ(TIM4_IRQn); //Timer2 Interrupt
-
-	//pinMode(IR_TIMER_PWM_PIN, OUTPUT);
-	//digitalWrite(IR_TIMER_PWM_PIN, LOW); // When not sending PWM, we want it low
-
-	// COM2A = 00: disconnect OC2A
-	// COM2B = 00: disconnect OC2B; to send signal set to 10: OC2B non-inverted
-	// WGM2 = 101: phase-correct PWM with OCRA as top
-	// CS2  = 000: no prescaling
-	// The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
-	//IR_TIMER_CONFIG_KHZ(khz);
+	// Disable the TIM2 Interrupt (which is used for receiving IR)
+	HAL_NVIC_DisableIRQ(TIM2_IRQn);
 
 	TIM_HandleTypeDef htim4;
 	GPIO_InitTypeDef GPIO_IR_TIMER_PWM;
 	TIM_OC_InitTypeDef IR_TIMER_PWM_CH;
 
 	__HAL_RCC_GPIOB_CLK_ENABLE();
-	__HAL_RCC_TIM2_CLK_ENABLE();
+	__HAL_RCC_TIM4_CLK_ENABLE();
 
 	GPIO_IR_TIMER_PWM.Pin = GPIO_PIN_6;
 	GPIO_IR_TIMER_PWM.Mode = GPIO_MODE_AF_PP;
@@ -111,13 +99,15 @@ void  IRsend_enableIROut (int khz)
 	IR_TIMER_PWM_CH.OCNIdleState = TIM_OCNIDLESTATE_RESET;
 
 	HAL_TIM_OC_ConfigChannel(&htim4, &IR_TIMER_PWM_CH, TIM_CHANNEL_1);
-	TIM_SET_CAPTUREPOLARITY(htim4, TIM_CHANNEL_1, TIM_CCxN_ENABLE | TIM_CCx_ENABLE );
+	TIM_SET_CAPTUREPOLARITY(&htim4, TIM_CHANNEL_1, TIM_CCxN_ENABLE | TIM_CCx_ENABLE );
 
 	HAL_TIM_OC_Start(&htim4, TIM_CHANNEL_1); // start generating IR carrier
 }
 
 //+=============================================================================
 // Custom delay function that circumvents Arduino's delayMicroseconds limit
+
+///TODO !!!
 
 void IRsend_custom_delay_usec(uint32_t uSecs)
 {

@@ -124,7 +124,7 @@ void  IRrecv_enableIRIn()
 //
 uint8_t  IRrecv_isIdle ( )
 {
- return (irparams.rcvstate == IR_STATE_IDLE || irparams.rcvstate == IR_STATE_STOP) ? 1 : 0;
+	return (irparams.rcvstate == IR_STATE_IDLE || irparams.rcvstate == IR_STATE_STOP) ? 1 : 0;
 }
 //+=============================================================================
 // Restart the ISR state machine
