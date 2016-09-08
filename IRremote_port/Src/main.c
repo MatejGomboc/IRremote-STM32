@@ -49,14 +49,16 @@ int main(void)
 	/* Configure the system clock */
 	SystemClock_Config();
 
-	IRsend_enableIROut(36);
+	//IRsend_enableIROut(36);
 
 	/* Infinite loop */
+	//const unsigned int buf[10] = {1,2,3,4,5,6,7,8,9,0};
 	while (1)
 	{
-		for (int i = 0; i < 3; i++)
-		{
-		}
+		IRsend_sendSony(0xA90, 12);
+		//IRsend_space(10000);
+		//IRsend_sendRaw(buf, 10, 42);
+		HAL_Delay(10000);
 	}
 }
 

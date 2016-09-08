@@ -98,7 +98,6 @@ typedef struct
 extern void IRrecv_init1 (int recvpin);
 extern void IRrecv_init2 (int recvpin, int blinkpin);
 
-extern void     IRrecv_blink13    (int blinkflag);
 extern int      IRrecv_decode     (ir_decode_results *results);
 extern void     IRrecv_enableIRIn (void);
 extern uint8_t  IRrecv_isIdle     (void);
@@ -133,7 +132,7 @@ extern void IR_ISR (void);
 //
 
 extern void IRsend_custom_delay_usec (unsigned long uSecs);
-extern void IRsend_enableIROut 	     (int khz);
+extern void IRsend_enableIROut 	     (uint32_t khz);
 extern void IRsend_mark        	     (unsigned int usec);
 extern void IRsend_space       	     (unsigned int usec);
 extern void IRsend_sendRaw     	     (const unsigned int buf[], unsigned int len, unsigned int hz);

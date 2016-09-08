@@ -36,7 +36,7 @@ void  IRsend_mark (unsigned int time)
 void  IRsend_space (unsigned int time)
 {
 	TIM_HandleTypeDef htim4;
-	HAL_TIM_OC_Stop(&htim4, TIM_CHANNEL_1); // Disable pin 3 PWM output
+	HAL_TIM_OC_Stop(&htim4, TIM_CHANNEL_1); // Disable PWM output
 	if (time > 0) IRsend_custom_delay_usec(time);
 }
 
@@ -44,7 +44,7 @@ void  IRsend_space (unsigned int time)
 // Enables IR output.  The khz value controls the modulation frequency in kilohertz.
 // To turn the output on and off, we leave the PWM running, but connect and disconnect the output pin.
 //
-void  IRsend_enableIROut (int khz)
+void  IRsend_enableIROut (uint32_t khz)
 {
 	// Disable the TIM2 Interrupt (which is used for receiving IR)
 	HAL_NVIC_DisableIRQ(TIM2_IRQn);
@@ -64,13 +64,14 @@ void  IRsend_enableIROut (int khz)
 
 	HAL_GPIO_Init(GPIOB, &GPIO_IR_TIMER_PWM);
 
-	HAL_TIM_OC_DeInit(&htim4);
+	//HAL_TIM_OC_DeInit(&htim4);
+	//HAL_TIM_OC_Stop(&htim4, TIM_CHANNEL_1);
 
 	/* PWM_frequency = timer_tick_frequency / (TIM_Period + 1) */
 
 	htim4.Instance = TIM4;
-	uint32_t period = (uint32_t)HAL_RCC_GetHCLKFreq() / (uint32_t)(khz * 1000 * 100);
-	htim4.Init.Period = period;
+	uint32_t period = 1000 / khz;
+	htim4.Init.Period = period & 0xFFFF;
 	htim4.Init.Prescaler = 100;
 	htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
 	htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -86,7 +87,7 @@ void  IRsend_enableIROut (int khz)
 	/* pulse_length = ((TIM_Period + 1) * DutyCycle) / 100 - 1 */
 	/* where DutyCycle is in percent, between 0 and 100% */
 
-	IR_TIMER_PWM_CH.Pulse = ((uint32_t)period)/2;
+	IR_TIMER_PWM_CH.Pulse = (((uint32_t)period)/2) & 0xFFFF;
 	IR_TIMER_PWM_CH.OCPolarity = TIM_OCPOLARITY_HIGH;
 	IR_TIMER_PWM_CH.OCNPolarity = TIM_OCNPOLARITY_HIGH;
 	IR_TIMER_PWM_CH.OCFastMode = TIM_OCFAST_DISABLE;
