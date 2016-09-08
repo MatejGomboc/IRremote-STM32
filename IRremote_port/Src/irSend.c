@@ -2,6 +2,8 @@
 #include "IRremoteInt.h"
 #include "stm32f4xx_hal_tim.h"
 
+TIM_HandleTypeDef htim4;
+
 //+=============================================================================
 void IRsend_sendRaw (const unsigned int buf[], unsigned int len, unsigned int khz)
 {
@@ -23,9 +25,9 @@ void IRsend_sendRaw (const unsigned int buf[], unsigned int len, unsigned int kh
 //
 void  IRsend_mark (unsigned int time)
 {
-	TIM_HandleTypeDef htim4;
+	//TIM_HandleTypeDef htim4;
 	HAL_TIM_OC_Start(&htim4, TIM_CHANNEL_1); // Enable PWM output
-	if (time > 0) IRsend_custom_delay_usec(time);
+	if (time > 0) HAL_Delay(time);//IRsend_custom_delay_usec(time);
 }
 
 //+=============================================================================
@@ -35,9 +37,9 @@ void  IRsend_mark (unsigned int time)
 //
 void  IRsend_space (unsigned int time)
 {
-	TIM_HandleTypeDef htim4;
+	//TIM_HandleTypeDef htim4;
 	HAL_TIM_OC_Stop(&htim4, TIM_CHANNEL_1); // Disable PWM output
-	if (time > 0) IRsend_custom_delay_usec(time);
+	if (time > 0) HAL_Delay(time);//IRsend_custom_delay_usec(time);
 }
 
 //+=============================================================================
@@ -49,7 +51,7 @@ void  IRsend_enableIROut (uint32_t khz)
 	// Disable the TIM2 Interrupt (which is used for receiving IR)
 	HAL_NVIC_DisableIRQ(TIM2_IRQn);
 
-	TIM_HandleTypeDef htim4;
+	//TIM_HandleTypeDef htim4;
 	GPIO_InitTypeDef GPIO_IR_TIMER_PWM;
 	TIM_OC_InitTypeDef IR_TIMER_PWM_CH;
 
@@ -64,8 +66,7 @@ void  IRsend_enableIROut (uint32_t khz)
 
 	HAL_GPIO_Init(GPIOB, &GPIO_IR_TIMER_PWM);
 
-	//HAL_TIM_OC_DeInit(&htim4);
-	//HAL_TIM_OC_Stop(&htim4, TIM_CHANNEL_1);
+	HAL_TIM_OC_DeInit(&htim4);
 
 	/* PWM_frequency = timer_tick_frequency / (TIM_Period + 1) */
 

@@ -53,12 +53,20 @@ int main(void)
 
 	/* Infinite loop */
 	//const unsigned int buf[10] = {1,2,3,4,5,6,7,8,9,0};
+
+	// Set IR carrier frequency
+	IRsend_enableIROut(40);
+
 	while (1)
 	{
-		IRsend_sendSony(0xA90, 12);
+	    // Header
+		//IRsend_mark(1000);
+		//IRsend_space(1000);
+
+		//IRsend_sendSony(0xA90, 12);
 		//IRsend_space(10000);
 		//IRsend_sendRaw(buf, 10, 42);
-		HAL_Delay(10000);
+		//HAL_Delay(10000);
 	}
 }
 
