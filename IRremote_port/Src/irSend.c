@@ -1,8 +1,7 @@
 #include "IRremote.h"
 #include "IRremoteInt.h"
 #include "stm32f4xx_hal_tim.h"
-
-TIM_HandleTypeDef htim4;
+#include "tim.h"
 
 //+=============================================================================
 void IRsend_sendRaw (const unsigned int buf[], unsigned int len, unsigned int khz)
@@ -19,15 +18,16 @@ void IRsend_sendRaw (const unsigned int buf[], unsigned int len, unsigned int kh
 	IRsend_space(0);  // Always end with the LED off
 }
 
+
 //+=============================================================================
 // Sends an IR mark for the specified number of microseconds.
 // The mark output is modulated at the PWM frequency.
 //
-void  IRsend_mark (unsigned int time)
+void IRsend_mark (unsigned int time)
 {
-	//TIM_HandleTypeDef htim4;
-	HAL_TIM_OC_Start(&htim4, TIM_CHANNEL_1); // Enable PWM output
-	if (time > 0) HAL_Delay(time);//IRsend_custom_delay_usec(time);
+	//TIM_HandleTypeDef htim3;
+	HAL_TIM_OC_Start(&htim3, TIM_CHANNEL_2); // Enable PWM output
+	if (time > 0) HAL_Delay(time/10);
 }
 
 //+=============================================================================
@@ -35,50 +35,53 @@ void  IRsend_mark (unsigned int time)
 // Sends an IR space for the specified number of microseconds.
 // A space is no output, so the PWM output is disabled.
 //
-void  IRsend_space (unsigned int time)
+void IRsend_space (unsigned int time)
 {
-	//TIM_HandleTypeDef htim4;
-	HAL_TIM_OC_Stop(&htim4, TIM_CHANNEL_1); // Disable PWM output
-	if (time > 0) HAL_Delay(time);//IRsend_custom_delay_usec(time);
+	//TIM_HandleTypeDef htim3;
+	HAL_TIM_OC_Stop(&htim3, TIM_CHANNEL_2); // Disable PWM output
+	if (time > 0) HAL_Delay(time/10);
 }
 
 //+=============================================================================
 // Enables IR output.  The khz value controls the modulation frequency in kilohertz.
 // To turn the output on and off, we leave the PWM running, but connect and disconnect the output pin.
 //
-void  IRsend_enableIROut (uint32_t khz)
+void IRsend_enableIROut (uint32_t khz)
 {
 	// Disable the TIM2 Interrupt (which is used for receiving IR)
 	HAL_NVIC_DisableIRQ(TIM2_IRQn);
 
-	//TIM_HandleTypeDef htim4;
+	//------------------------------------------------------------------
+	// TIM4 initialization
+	//
+
 	GPIO_InitTypeDef GPIO_IR_TIMER_PWM;
 	TIM_OC_InitTypeDef IR_TIMER_PWM_CH;
 
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	__HAL_RCC_TIM4_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_TIM3_CLK_ENABLE();
 
-	GPIO_IR_TIMER_PWM.Pin = GPIO_PIN_6;
+	GPIO_IR_TIMER_PWM.Pin = GPIO_PIN_7;
 	GPIO_IR_TIMER_PWM.Mode = GPIO_MODE_AF_PP;
 	GPIO_IR_TIMER_PWM.Pull = GPIO_NOPULL;
 	GPIO_IR_TIMER_PWM.Speed = GPIO_SPEED_HIGH;
-	GPIO_IR_TIMER_PWM.Alternate = GPIO_AF2_TIM4;
+	GPIO_IR_TIMER_PWM.Alternate = GPIO_AF2_TIM3;
 
-	HAL_GPIO_Init(GPIOB, &GPIO_IR_TIMER_PWM);
+	HAL_GPIO_Init(GPIOA, &GPIO_IR_TIMER_PWM);
 
-	HAL_TIM_OC_DeInit(&htim4);
+	HAL_TIM_OC_DeInit(&htim3);
 
 	/* PWM_frequency = timer_tick_frequency / (TIM_Period + 1) */
 
-	htim4.Instance = TIM4;
+	htim3.Instance = TIM3;
 	uint32_t period = 1000 / khz;
-	htim4.Init.Period = period & 0xFFFF;
-	htim4.Init.Prescaler = 100;
-	htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	htim3.Init.Period = period & 0xFFFF;
+	htim3.Init.Prescaler = 100;
+	htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 
-	HAL_TIM_Base_Init(&htim4);
-	HAL_TIM_OC_Init(&htim4);
+	HAL_TIM_Base_Init(&htim3);
+	HAL_TIM_OC_Init(&htim3);
 
 	/* PWM mode 2 = Clear on compare match */
 	/* PWM mode 1 = Set on compare match */
@@ -95,33 +98,39 @@ void  IRsend_enableIROut (uint32_t khz)
 	IR_TIMER_PWM_CH.OCIdleState = TIM_OCIDLESTATE_RESET;
 	IR_TIMER_PWM_CH.OCNIdleState = TIM_OCNIDLESTATE_RESET;
 
-	HAL_TIM_OC_ConfigChannel(&htim4, &IR_TIMER_PWM_CH, TIM_CHANNEL_1);
-	TIM_SET_CAPTUREPOLARITY(&htim4, TIM_CHANNEL_1, TIM_CCxN_ENABLE | TIM_CCx_ENABLE );
+	HAL_TIM_OC_ConfigChannel(&htim3, &IR_TIMER_PWM_CH, TIM_CHANNEL_2);
+	TIM_SET_CAPTUREPOLARITY(&htim3, TIM_CHANNEL_2, TIM_CCxN_ENABLE | TIM_CCx_ENABLE );
 
-	HAL_TIM_OC_Start(&htim4, TIM_CHANNEL_1); // start generating IR carrier
-}
+	HAL_TIM_OC_Start(&htim3, TIM_CHANNEL_2); // start generating IR carrier
 
-//+=============================================================================
-// Custom delay function
+	//------------------------------------------------------------------
 
-///TODO !!!
+//	//------------------------------------------------------------------
+//	// TIM2 initialization
+//	//
+//
+//	__HAL_RCC_TIM2_CLK_ENABLE();
+//	TIM_ClockConfigTypeDef sClockSourceConfig;
+//
+//	htim2.Instance = TIM2;
+//	htim2.Init.Prescaler = 100;
+//	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+//	htim2.Init.Period = 1;
+//	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+//
+//	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+//	if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+//	{
+//		Error_Handler();
+//	}
+//
+//	if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+//	{
+//		Error_Handler();
+//	}
+//
+//	//------------------------------------------------------------------
 
-void IRsend_custom_delay_usec(uint32_t uSecs)
-{
-  if (uSecs > 4)
-  {
-	uint32_t start = HAL_GetTick() * 1000U;
-	uint32_t endMicros = start + uSecs - 4;
-
-    if (endMicros < start)
-    { // Check if overflow
-      while (HAL_GetTick() * 1000U > start) {} // wait until overflow
-    }
-
-    while (HAL_GetTick() * 1000U < endMicros) {} // normal wait
-  }
-  //else {
-  //  __asm__("nop\n\t"); // must have or compiler optimizes out
-  //}
+//	IRreceiving = 0;
 }
 

@@ -11,7 +11,8 @@ C_SRCS += \
 ../Src/ir_Sony.c \
 ../Src/main.c \
 ../Src/stm32f4xx_hal_msp.c \
-../Src/stm32f4xx_it.c 
+../Src/stm32f4xx_it.c \
+../Src/tim.c 
 
 OBJS += \
 ./Src/IRremote.o \
@@ -21,7 +22,8 @@ OBJS += \
 ./Src/ir_Sony.o \
 ./Src/main.o \
 ./Src/stm32f4xx_hal_msp.o \
-./Src/stm32f4xx_it.o 
+./Src/stm32f4xx_it.o \
+./Src/tim.o 
 
 C_DEPS += \
 ./Src/IRremote.d \
@@ -31,7 +33,8 @@ C_DEPS += \
 ./Src/ir_Sony.d \
 ./Src/main.d \
 ./Src/stm32f4xx_hal_msp.d \
-./Src/stm32f4xx_it.d 
+./Src/stm32f4xx_it.d \
+./Src/tim.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

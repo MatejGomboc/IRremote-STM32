@@ -21,15 +21,6 @@
 #include "stm32f4xx_hal.h"
 
 //------------------------------------------------------------------------------
-// This handles definition and access to global variables
-//
-#ifdef IR_GLOBAL
-#	define IR_EXTERN
-#else
-#	define IR_EXTERN extern
-#endif
-
-//------------------------------------------------------------------------------
 // Information for the Interrupt Service Routine
 //
 #define IR_RAWBUF  101  // Maximum length of raw duration buffer
@@ -59,7 +50,7 @@ typedef struct
 // Allow all parts of the code access to the ISR data
 // NB. The data can be changed by the ISR at any time, even mid-function
 // Therefore we declare it as "volatile" to stop the compiler/CPU caching it
-IR_EXTERN volatile irparams_t irparams;
+extern volatile irparams_t irparams;
 
 
 //------------------------------------------------------------------------------

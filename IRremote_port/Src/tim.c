@@ -1,7 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : mxconstants.h
-  * Description        : This file contains the common defines of the application
+  * File Name          : TIM.c
+  * Description        : This file provides code for the configuration
+  *                      of the TIM instances.
   ******************************************************************************
   *
   * COPYRIGHT(c) 2016 STMicroelectronics
@@ -30,28 +31,65 @@
   *
   ******************************************************************************
   */
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MXCONSTANT_H
-#define __MXCONSTANT_H
-  /* Includes ------------------------------------------------------------------*/
 
-/* USER CODE BEGIN Includes */
+/* Includes ------------------------------------------------------------------*/
+#include "tim.h"
 
-/* USER CODE END Includes */
+TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef htim3;
 
-/* Private define ------------------------------------------------------------*/
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
+{
+	if(tim_baseHandle->Instance==TIM3)
+	{
+		/* Peripheral clock enable */
+		__HAL_RCC_TIM3_CLK_ENABLE();
+	}
+	else if(tim_baseHandle->Instance==TIM2)
+	{
+		/* Peripheral clock enable */
+		__HAL_RCC_TIM2_CLK_ENABLE();
 
-/* USER CODE BEGIN Private defines */
+		/* Peripheral interrupt init */
+		HAL_NVIC_SetPriority(TIM2_IRQn, 2, 0);
+		HAL_NVIC_EnableIRQ(TIM2_IRQn);
 
-/* USER CODE END Private defines */
+		if(HAL_TIM_Base_Start_IT(tim_baseHandle) != HAL_OK)
+		{
+			Error_Handler();
+		}
+	}
+}
+
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
+{
+	if(tim_baseHandle->Instance==TIM2)
+	{
+		if(HAL_TIM_Base_Stop_IT(tim_baseHandle) != HAL_OK)
+	    {
+			Error_Handler();
+	    }
+
+	    /* Peripheral clock disable */
+	    __HAL_RCC_TIM2_CLK_DISABLE();
+
+	    /* Peripheral interrupt Deinit*/
+	    HAL_NVIC_DisableIRQ(TIM2_IRQn);
+	}
+	else if(tim_baseHandle->Instance==TIM3)
+	{
+		/* Peripheral clock disable */
+		__HAL_RCC_TIM3_CLK_DISABLE();
+	}
+}
+
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-*/ 
+  */
 
-#endif /* __MXCONSTANT_H */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

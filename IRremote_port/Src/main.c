@@ -49,25 +49,30 @@ int main(void)
 	/* Configure the system clock */
 	SystemClock_Config();
 
+	/* Infinite loop */
+
 	//IRsend_enableIROut(36);
 
-	/* Infinite loop */
-	//const unsigned int buf[10] = {1,2,3,4,5,6,7,8,9,0};
+	//volatile unsigned long xyz = 0;
+	//ir_decode_results results;
 
-	// Set IR carrier frequency
-	IRsend_enableIROut(40);
+	//IRrecv_IRrecvInit(GPIOB, GPIO_PIN_4);
+	//IRrecv_enableIRIn(); // Start the receiver
 
 	while (1)
 	{
-	    // Header
-		//IRsend_mark(1000);
-		//IRsend_space(1000);
+		IRsend_sendSony(0xF00, 12);
+		HAL_Delay(10000); //1 second delay
 
-		//IRsend_sendSony(0xA90, 12);
-		//IRsend_space(10000);
-		//IRsend_sendRaw(buf, 10, 42);
-		//HAL_Delay(10000);
+//		if (IRrecv_decode(&results))
+//		{
+//			xyz = results.value;
+//		    IRrecv_resume(); // Receive the next value
+//		}
+		//HAL_Delay(1000); //1ms delay
 	}
+
+	//while(xyz);
 }
 
 /** System Clock Configuration
@@ -106,7 +111,7 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 
-  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/100000);
 
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 

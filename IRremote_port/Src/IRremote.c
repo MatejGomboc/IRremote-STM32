@@ -127,7 +127,7 @@ int IR_MATCH_SPACE (int measured_ticks,  int desired_us)
 //   Gap width is recorded; Ready is cleared; New logging starts
 //
 
-void IR_ISR ()
+void IR_Recv_ISR ()
 {
 	// Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
 	uint8_t irdata = (uint8_t)HAL_GPIO_ReadPin(irparams.recvpinport, irparams.recvpin);
@@ -208,6 +208,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance==TIM2)
 	{
-		IR_ISR();
+		IR_Recv_ISR();
 	}
 }

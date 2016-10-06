@@ -24,16 +24,16 @@
 // Each protocol you include costs memory and, during decode, costs time
 // Disable (set to 0) all the protocols you do not need/want!
 //
-#define IR_DECODE_RC5           1
-#define IR_SEND_RC5             1
+#define IR_DECODE_RC5           0
+#define IR_SEND_RC5             0
 
-#define IR_DECODE_RC6           1
-#define IR_SEND_RC6             1
+#define IR_DECODE_RC6           0
+#define IR_SEND_RC6             0
 
 #define IR_DECODE_SONY          1
 #define IR_SEND_SONY            1
 
-#define IR_DECODE_SANYO         1
+#define IR_DECODE_SANYO         0
 
 //------------------------------------------------------------------------------
 // An enumerated list of all supported formats
@@ -50,7 +50,7 @@ typedef enum
 } ir_decode_type_t;
 
 //------------------------------------------------------------------------------
-// Set DEBUG to 1 for lots of lovely debug output
+// Set IR_DEBUG to 1 for debug output
 //
 #define IR_DEBUG  0
 
@@ -68,9 +68,9 @@ typedef enum
 //------------------------------------------------------------------------------
 // Mark & Space matching functions
 //
-int  IR_MATCH       (int measured, int desired) ;
-int  IR_MATCH_MARK  (int measured_ticks, int desired_us) ;
-int  IR_MATCH_SPACE (int measured_ticks, int desired_us) ;
+int  IR_MATCH       (int measured, int desired);
+int  IR_MATCH_MARK  (int measured_ticks, int desired_us);
+int  IR_MATCH_SPACE (int measured_ticks, int desired_us);
 
 //------------------------------------------------------------------------------
 // Results returned from the decoder
@@ -95,8 +95,8 @@ typedef struct
 // Functions for receiving IR
 //
 
-extern void IRrecv_init1 (int recvpin);
-extern void IRrecv_init2 (int recvpin, int blinkpin);
+extern void IRrecv_IRrecvInit (GPIO_TypeDef* recvpinport, uint16_t recvpin);
+extern void IRrecv_IRrecvInitBlink (GPIO_TypeDef* recvpinport, uint16_t recvpin, GPIO_TypeDef* blinkpinport, uint16_t blinkpin);
 
 extern int      IRrecv_decode     (ir_decode_results *results);
 extern void     IRrecv_enableIRIn (void);
@@ -131,7 +131,6 @@ extern void IR_ISR (void);
 // Functions for sending IR
 //
 
-extern void IRsend_custom_delay_usec (unsigned long uSecs);
 extern void IRsend_enableIROut 	     (uint32_t khz);
 extern void IRsend_mark        	     (unsigned int usec);
 extern void IRsend_space       	     (unsigned int usec);
@@ -150,7 +149,6 @@ extern void IRsend_sendRC6 (unsigned long data, int nbits);
 extern void IRsend_sendSony (unsigned long data, int nbits);
 #endif
 //......................................................................
-
 
 extern void Error_Handler(void);
 

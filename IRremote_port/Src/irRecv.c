@@ -2,6 +2,13 @@
 #include "IRremoteInt.h"
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_tim.h"
+#include "tim.h"
+
+
+// Allow all parts of the code access to the ISR data
+// NB. The data can be changed by the ISR at any time, even mid-function
+// Therefore we declare it as "volatile" to stop the compiler/CPU caching it
+volatile irparams_t irparams;
 
 //+=============================================================================
 // Decodes the received IR message
@@ -73,39 +80,6 @@ void IRrecv_IRrecvInitBlink (GPIO_TypeDef* recvpinport, uint16_t recvpin, GPIO_T
 //
 void  IRrecv_enableIRIn()
 {
-	// Setup pulse clock timer interrupt
-	// Prescale /50 (100M/50 = 0.5 microseconds per tick)
-	// Therefore, the timer interval can range from 0.5 to 128 microseconds
-	// Depending on the reset value (255 to 0), current value = 50us
-
-	TIM_HandleTypeDef htim2;
-	htim2.Instance = TIM2;
-	htim2.Init.Prescaler = 50;
-	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim2.Init.Period = 100;
-	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
-	{
-		Error_Handler();
-	}
-	TIM_ClockConfigTypeDef sClockSourceConfig;
-	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-	if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
-	{
-		Error_Handler();
-	}
-
-	/* TIM2 clock enable */
-	__HAL_RCC_TIM2_CLK_ENABLE();
-
-	/* TIM2 interrupt init */
-	HAL_NVIC_SetPriority(TIM2_IRQn, 1, 0);
-	HAL_NVIC_EnableIRQ(TIM2_IRQn);
-	if(HAL_TIM_Base_Start_IT(&htim2) != HAL_OK)
-	{
-		Error_Handler();
-	}
-
 	// Initialize state machine variables
 	irparams.rcvstate = IR_STATE_IDLE;
 	irparams.rawlen = 0;
@@ -117,6 +91,31 @@ void  IRrecv_enableIRIn()
 	GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 	HAL_GPIO_Init(irparams.recvpinport, &GPIO_InitStruct);
+
+	// Setup pulse clock timer interrupt
+	// Prescale /50 (100M/50 = 0.5 microseconds per tick)
+	// Therefore, the timer interval can range from 0.5 to 128 microseconds
+	// Depending on the reset value (255 to 0), current value = 50us
+
+	htim2.Instance = TIM2;
+	htim2.Init.Prescaler = 500;
+	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim2.Init.Period = 100;
+	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+
+	TIM_ClockConfigTypeDef sClockSourceConfig;
+	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+	if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	HAL_TIM_Base_MspInit(&htim2);
 }
 
 //+=============================================================================

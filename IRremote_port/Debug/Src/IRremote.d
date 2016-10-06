@@ -3,7 +3,6 @@ Src/IRremote.o: ../Src/IRremote.c \
  C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Inc/IRremoteInt.h \
  C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Inc/stm32f4xx_hal_conf.h \
- C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Inc/mxconstants.h \
  C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
  C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
@@ -37,8 +36,6 @@ C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Inc/IRremoteInt.h:
 C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 
 C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Inc/stm32f4xx_hal_conf.h:
-
-C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Inc/mxconstants.h:
 
 C:/Users/user/Desktop/nucleo_workspace/IRremote_port/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:
 
