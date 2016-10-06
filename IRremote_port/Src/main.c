@@ -56,6 +56,7 @@ int main(void)
 	volatile unsigned long xyz = 0;
 	ir_decode_results results;
 
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 	IRrecv_IRrecvInit(GPIOB, GPIO_PIN_4);
 	IRrecv_enableIRIn(); // Start the receiver
 

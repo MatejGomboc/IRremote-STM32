@@ -88,7 +88,7 @@ void  IRrecv_enableIRIn()
 	GPIO_InitTypeDef GPIO_InitStruct;
 	GPIO_InitStruct.Pin = irparams.recvpin;
 	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-	GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 	HAL_GPIO_Init(irparams.recvpinport, &GPIO_InitStruct);
 
