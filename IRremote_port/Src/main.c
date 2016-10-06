@@ -53,26 +53,26 @@ int main(void)
 
 	//IRsend_enableIROut(36);
 
-	//volatile unsigned long xyz = 0;
-	//ir_decode_results results;
+	volatile unsigned long xyz = 0;
+	ir_decode_results results;
 
-	//IRrecv_IRrecvInit(GPIOB, GPIO_PIN_4);
-	//IRrecv_enableIRIn(); // Start the receiver
+	IRrecv_IRrecvInit(GPIOB, GPIO_PIN_4);
+	IRrecv_enableIRIn(); // Start the receiver
 
 	while (1)
 	{
-		IRsend_sendSony(0xF00, 12);
-		HAL_Delay(10000); //1 second delay
+		//IRsend_sendSony(0xF00, 12);
+		//HAL_Delay(10000); //1 second delay
 
-//		if (IRrecv_decode(&results))
-//		{
-//			xyz = results.value;
-//		    IRrecv_resume(); // Receive the next value
-//		}
-		//HAL_Delay(1000); //1ms delay
+		if (IRrecv_decode(&results))
+		{
+			xyz = results.value;
+		    IRrecv_resume(); // Receive the next value
+		}
+		HAL_Delay(1000); //1ms delay
 	}
 
-	//while(xyz);
+	while(xyz);
 }
 
 /** System Clock Configuration

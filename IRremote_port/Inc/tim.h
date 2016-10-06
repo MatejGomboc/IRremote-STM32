@@ -47,8 +47,6 @@ extern TIM_HandleTypeDef htim3;
 
 extern void Error_Handler(void);
 
-void MX_TIM2_Init(void);
-
 #ifdef __cplusplus
 }
 #endif

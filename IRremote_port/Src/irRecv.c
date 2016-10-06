@@ -97,25 +97,24 @@ void  IRrecv_enableIRIn()
 	// Therefore, the timer interval can range from 0.5 to 128 microseconds
 	// Depending on the reset value (255 to 0), current value = 50us
 
+	TIM_ClockConfigTypeDef sClockSourceConfig;
+
 	htim2.Instance = TIM2;
 	htim2.Init.Prescaler = 500;
 	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
 	htim2.Init.Period = 100;
 	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 
-	TIM_ClockConfigTypeDef sClockSourceConfig;
+	if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+	{
+	Error_Handler();
+	}
+
 	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
 	if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
 	{
-		Error_Handler();
+	Error_Handler();
 	}
-
-	if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
-	{
-		Error_Handler();
-	}
-
-	HAL_TIM_Base_MspInit(&htim2);
 }
 
 //+=============================================================================

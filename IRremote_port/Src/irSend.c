@@ -52,7 +52,7 @@ void IRsend_enableIROut (uint32_t khz)
 	HAL_NVIC_DisableIRQ(TIM2_IRQn);
 
 	//------------------------------------------------------------------
-	// TIM4 initialization
+	// TIM3 initialization
 	//
 
 	GPIO_InitTypeDef GPIO_IR_TIMER_PWM;
