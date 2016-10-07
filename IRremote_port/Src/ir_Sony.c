@@ -1,6 +1,8 @@
 #include "IRremote.h"
 #include "IRremoteInt.h"
 
+// Code based on https://github.com/z3t0/Arduino-IRremote !
+//
 //==============================================================================
 //                           SSSS   OOO   N   N  Y   Y
 //                          S      O   O  NN  N   Y Y
@@ -58,20 +60,8 @@ uint8_t  IRrecv_decodeSony (ir_decode_results *results)
 
 	// Some Sony's deliver repeats fast after first
 	// unfortunately can't spot difference from of repeat from two fast clicks
-	if (results->rawbuf[offset] < IR_SONY_DOUBLE_SPACE_USECS)
-	{
-		// Serial.print("IR Gap found: ");
-		results->bits = 0;
-		results->value = IR_REPEAT;
+	if (results->rawbuf[offset] < IR_SONY_DOUBLE_SPACE_USECS) return 0;
 
-#	ifdef IR_DECODE_SANYO
-		results->decode_type = SANYO;
-#	else
-		results->decode_type = UNKNOWN;
-#	endif
-
-	    return 1;
-	}
 	offset++;
 
 	// Initial mark

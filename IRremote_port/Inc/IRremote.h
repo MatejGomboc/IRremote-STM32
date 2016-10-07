@@ -1,4 +1,6 @@
 //******************************************************************************
+// Code based on https://github.com/z3t0/Arduino-IRremote !
+//
 // IRremote
 // Version 2.0.1 June, 2015
 // Copyright 2009 Ken Shirriff
@@ -19,34 +21,24 @@
 
 #include "IRremoteInt.h"
 #include <stdint.h>
+
 //------------------------------------------------------------------------------
 // Supported IR protocols
-// Each protocol you include costs memory and, during decode, costs time
-// Disable (set to 0) all the protocols you do not need/want!
 //
-#define IR_DECODE_RC5           0
-#define IR_SEND_RC5             0
-
-#define IR_DECODE_RC6           0
-#define IR_SEND_RC6             0
 
 #define IR_DECODE_SONY          1
 #define IR_SEND_SONY            1
-
-#define IR_DECODE_SANYO         0
 
 //------------------------------------------------------------------------------
 // An enumerated list of all supported formats
 // You do NOT need to remove entries from this list when disabling protocols!
 //
+
 typedef enum
 {
 	UNKNOWN      = -1,
 	UNUSED       =  0,
-	RC5,
-	RC6,
-	SONY,
-	SANYO
+	SONY
 } ir_decode_type_t;
 
 //------------------------------------------------------------------------------
@@ -58,9 +50,11 @@ typedef enum
 // Debug directives
 //
 #if IR_DEBUG
-#	define IR_DBG_PRINT(...)    printf(__VA_ARGS__)
-#	define IR_DBG_PRINTLN(...)  printf(__VA_ARGS__); printf("\n")
+#	define IR_DBG_PRINT_INT(integer)	printf("%d", integer)
+#	define IR_DBG_PRINT(string)    		printf(string)
+#	define IR_DBG_PRINTLN(string)  		{printf(string); printf("\n");}
 #else
+#	define IR_DBG_PRINT_INT(...)
 #	define IR_DBG_PRINT(...)
 #	define IR_DBG_PRINTLN(...)
 #endif
@@ -87,11 +81,6 @@ typedef struct
 } ir_decode_results;
 
 //------------------------------------------------------------------------------
-// Decoded value for NEC when a repeat code is received
-//
-#define IR_REPEAT 0xFFFFFFFF
-
-//------------------------------------------------------------------------------
 // Functions for receiving IR
 //
 
@@ -106,18 +95,6 @@ extern void     IRrecv_resume     (void);
 long  IRrecv_decodeHash (ir_decode_results *results) ;
 int   IRrecv_compare    (unsigned int oldval, unsigned int newval);
 
-//......................................................................
-#if (IR_DECODE_RC5 || IR_DECODE_RC6)
-	// This helper function is shared by RC5 and RC6
-	int IRrecv_getRClevel (ir_decode_results *results, int *offset,  int *used,  int t1);
-#endif
-
-#if IR_DECODE_RC5
-	extern uint8_t IRrecv_decodeRC5 (ir_decode_results *results);
-#endif
-#if IR_DECODE_RC6
-	extern uint8_t IRrecv_decodeRC6 (ir_decode_results *results);
-#endif
 
 //......................................................................
 #if IR_DECODE_SONY
@@ -131,19 +108,12 @@ extern void IR_ISR (void);
 // Functions for sending IR
 //
 
-extern void IRsend_enableIROut 	     (uint32_t khz);
-extern void IRsend_mark        	     (unsigned int usec);
-extern void IRsend_space       	     (unsigned int usec);
-extern void IRsend_sendRaw     	     (const unsigned int buf[], unsigned int len, unsigned int hz);
+extern void IRsend_enableIROut (uint32_t khz);
+extern void IRsend_mark        (unsigned int usec);
+extern void IRsend_space       (unsigned int usec);
+extern void IRsend_sendRaw     (const unsigned int buf[], unsigned int len, unsigned int hz);
 
-//......................................................................
-#if IR_SEND_RC5
-extern void IRsend_sendRC5 (unsigned long data, int nbits);
-#endif
 
-#if IR_SEND_RC6
-extern void IRsend_sendRC6 (unsigned long data, int nbits);
-#endif
 //......................................................................
 #if IR_SEND_SONY
 extern void IRsend_sendSony (unsigned long data, int nbits);

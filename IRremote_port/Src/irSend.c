@@ -3,6 +3,8 @@
 #include "stm32f4xx_hal_tim.h"
 #include "tim.h"
 
+// Code based on https://github.com/z3t0/Arduino-IRremote !
+
 //+=============================================================================
 void IRsend_sendRaw (const unsigned int buf[], unsigned int len, unsigned int khz)
 {
@@ -25,7 +27,6 @@ void IRsend_sendRaw (const unsigned int buf[], unsigned int len, unsigned int kh
 //
 void IRsend_mark (unsigned int time)
 {
-	//TIM_HandleTypeDef htim3;
 	HAL_TIM_OC_Start(&htim3, TIM_CHANNEL_2); // Enable PWM output
 	if (time > 0) HAL_Delay(time/10);
 }
@@ -37,7 +38,6 @@ void IRsend_mark (unsigned int time)
 //
 void IRsend_space (unsigned int time)
 {
-	//TIM_HandleTypeDef htim3;
 	HAL_TIM_OC_Stop(&htim3, TIM_CHANNEL_2); // Disable PWM output
 	if (time > 0) HAL_Delay(time/10);
 }
@@ -104,33 +104,4 @@ void IRsend_enableIROut (uint32_t khz)
 	HAL_TIM_OC_Start(&htim3, TIM_CHANNEL_2); // start generating IR carrier
 
 	//------------------------------------------------------------------
-
-//	//------------------------------------------------------------------
-//	// TIM2 initialization
-//	//
-//
-//	__HAL_RCC_TIM2_CLK_ENABLE();
-//	TIM_ClockConfigTypeDef sClockSourceConfig;
-//
-//	htim2.Instance = TIM2;
-//	htim2.Init.Prescaler = 100;
-//	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-//	htim2.Init.Period = 1;
-//	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-//
-//	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-//	if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
-//	{
-//		Error_Handler();
-//	}
-//
-//	if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
-//	{
-//		Error_Handler();
-//	}
-//
-//	//------------------------------------------------------------------
-
-//	IRreceiving = 0;
 }
-

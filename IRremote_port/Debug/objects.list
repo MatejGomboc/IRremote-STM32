@@ -17,7 +17,6 @@
 "Src/IRremote.o"
 "Src/irRecv.o"
 "Src/irSend.o"
-"Src/ir_RC5_RC6.o"
 "Src/ir_Sony.o"
 "Src/main.o"
 "Src/stm32f4xx_hal_msp.o"

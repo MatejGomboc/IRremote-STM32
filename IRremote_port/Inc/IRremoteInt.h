@@ -1,4 +1,6 @@
 //******************************************************************************
+// Code based on https://github.com/z3t0/Arduino-IRremote !
+//
 // IRremote
 // Version 2.0.1 June, 2015
 // Copyright 2009 Ken Shirriff

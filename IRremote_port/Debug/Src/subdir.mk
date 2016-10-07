@@ -7,7 +7,6 @@ C_SRCS += \
 ../Src/IRremote.c \
 ../Src/irRecv.c \
 ../Src/irSend.c \
-../Src/ir_RC5_RC6.c \
 ../Src/ir_Sony.c \
 ../Src/main.c \
 ../Src/stm32f4xx_hal_msp.c \
@@ -18,7 +17,6 @@ OBJS += \
 ./Src/IRremote.o \
 ./Src/irRecv.o \
 ./Src/irSend.o \
-./Src/ir_RC5_RC6.o \
 ./Src/ir_Sony.o \
 ./Src/main.o \
 ./Src/stm32f4xx_hal_msp.o \
@@ -29,7 +27,6 @@ C_DEPS += \
 ./Src/IRremote.d \
 ./Src/irRecv.d \
 ./Src/irSend.d \
-./Src/ir_RC5_RC6.d \
 ./Src/ir_Sony.d \
 ./Src/main.d \
 ./Src/stm32f4xx_hal_msp.d \

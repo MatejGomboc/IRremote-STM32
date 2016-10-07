@@ -1,4 +1,6 @@
 //******************************************************************************
+// Code based on https://github.com/z3t0/Arduino-IRremote !
+//
 // IRremote
 // Version 2.0.1 June, 2015
 // Copyright 2009 Ken Shirriff
@@ -41,19 +43,19 @@
 //
 int IR_MATCH (int measured,  int desired)
 {
-	IR_DBG_PRINT(F("Testing: "));
-	IR_DBG_PRINT(IR_TICKS_LOW(desired), DEC);
-	IR_DBG_PRINT(F(" <= "));
-	IR_DBG_PRINT(measured, DEC);
-	IR_DBG_PRINT(F(" <= "));
-	IR_DBG_PRINT(IR_TICKS_HIGH(desired), DEC);
+	IR_DBG_PRINT("Testing: ");
+	IR_DBG_PRINT_INT(IR_TICKS_LOW(desired));
+	IR_DBG_PRINT(" <= ");
+	IR_DBG_PRINT_INT(measured);
+	IR_DBG_PRINT(" <= ");
+	IR_DBG_PRINT_INT(IR_TICKS_HIGH(desired));
 
 	uint8_t passed = ((measured >= IR_TICKS_LOW(desired)) && (measured <= IR_TICKS_HIGH(desired)));
 
 	if (passed)
-		IR_DBG_PRINTLN(F("?; passed"));
+		IR_DBG_PRINTLN("?; passed");
 	else
-		IR_DBG_PRINTLN(F("?; FAILED"));
+		IR_DBG_PRINTLN("?; FAILED");
 
 	return passed;
 }
@@ -64,16 +66,16 @@ int IR_MATCH (int measured,  int desired)
 int IR_MATCH_MARK (int measured_ticks,  int desired_us)
 {
 	IR_DBG_PRINT("Testing mark (actual vs desired): ");
-	IR_DBG_PRINT(measured_ticks * IR_USECPERTICK);
+	IR_DBG_PRINT_INT(measured_ticks * IR_USECPERTICK);
 	IR_DBG_PRINT("us vs ");
-	IR_DBG_PRINT(desired_us);
+	IR_DBG_PRINT_INT(desired_us);
 	IR_DBG_PRINT("us");
 	IR_DBG_PRINT(": ");
-	IR_DBG_PRINT(IR_TICKS_LOW(desired_us + IR_MARK_EXCESS) * IR_USECPERTICK);
+	IR_DBG_PRINT_INT(IR_TICKS_LOW(desired_us + IR_MARK_EXCESS) * IR_USECPERTICK);
 	IR_DBG_PRINT(" <= ");
-	IR_DBG_PRINT(measured_ticks * IR_USECPERTICK);
+	IR_DBG_PRINT_INT(measured_ticks * IR_USECPERTICK);
 	IR_DBG_PRINT(" <= ");
-	IR_DBG_PRINT(IR_TICKS_HIGH(desired_us + IR_MARK_EXCESS) * IR_USECPERTICK);
+	IR_DBG_PRINT_INT(IR_TICKS_HIGH(desired_us + IR_MARK_EXCESS) * IR_USECPERTICK);
 
 	uint8_t passed = ((measured_ticks >= IR_TICKS_LOW (desired_us + IR_MARK_EXCESS))
 			&& (measured_ticks <= IR_TICKS_HIGH(desired_us + IR_MARK_EXCESS)));
@@ -92,16 +94,16 @@ int IR_MATCH_MARK (int measured_ticks,  int desired_us)
 int IR_MATCH_SPACE (int measured_ticks,  int desired_us)
 {
 	IR_DBG_PRINT("Testing space (actual vs desired): ");
-	IR_DBG_PRINT(measured_ticks * IR_USECPERTICK);
+	IR_DBG_PRINT_INT(measured_ticks * IR_USECPERTICK);
 	IR_DBG_PRINT("us vs ");
-	IR_DBG_PRINT(desired_us);
+	IR_DBG_PRINT_INT(desired_us);
 	IR_DBG_PRINT("us");
 	IR_DBG_PRINT(": ");
-	IR_DBG_PRINT(IR_TICKS_LOW(desired_us - IR_MARK_EXCESS) * IR_USECPERTICK);
+	IR_DBG_PRINT_INT(IR_TICKS_LOW(desired_us - IR_MARK_EXCESS) * IR_USECPERTICK);
 	IR_DBG_PRINT(" <= ");
-	IR_DBG_PRINT(measured_ticks * IR_USECPERTICK);
+	IR_DBG_PRINT_INT(measured_ticks * IR_USECPERTICK);
 	IR_DBG_PRINT(" <= ");
-	IR_DBG_PRINT(IR_TICKS_HIGH(desired_us - IR_MARK_EXCESS) * IR_USECPERTICK);
+	IR_DBG_PRINT_INT(IR_TICKS_HIGH(desired_us - IR_MARK_EXCESS) * IR_USECPERTICK);
 
 	uint8_t passed = ((measured_ticks >= IR_TICKS_LOW (desired_us - IR_MARK_EXCESS))
 			&& (measured_ticks <= IR_TICKS_HIGH(desired_us - IR_MARK_EXCESS)));

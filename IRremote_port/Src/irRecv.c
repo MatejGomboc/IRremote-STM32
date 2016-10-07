@@ -4,6 +4,7 @@
 #include "stm32f4xx_hal_tim.h"
 #include "tim.h"
 
+// Code based on https://github.com/z3t0/Arduino-IRremote !
 
 // Allow all parts of the code access to the ISR data
 // NB. The data can be changed by the ISR at any time, even mid-function
@@ -24,24 +25,15 @@ int IRrecv_decode (ir_decode_results *results)
 	if (irparams.rcvstate != IR_STATE_STOP)  return 0 ;
 
 #if IR_DECODE_SONY
-	IR_DBG_PRINTLN("Attempting Sony decode");
+	IR_DBG_PRINTLN("Attempting Sony decode")
 	if (IRrecv_decodeSony(results))  return 1 ;
 #endif
 
-#if IR_DECODE_RC5
-	IR_DBG_PRINTLN("Attempting RC5 decode");
-	if (IRrecv_decodeRC5(results))  return 1 ;
-#endif
-
-#if IR_DECODE_RC6
-	IR_DBG_PRINTLN("Attempting RC6 decode");
-	if (IRrecv_decodeRC6(results))  return 1 ;
-#endif
-
+	//TODO ???
 	// decodeHash returns a hash on any input.
 	// Thus, it needs to be last in the list.
 	// If you add any decodes, add them before this.
-	if (IRrecv_decodeHash(results))  return 1 ;
+	//if (IRrecv_decodeHash(results))  return 1 ;
 
 	// Throw away and start over
 	IRrecv_resume();
@@ -93,9 +85,8 @@ void  IRrecv_enableIRIn()
 	HAL_GPIO_Init(irparams.recvpinport, &GPIO_InitStruct);
 
 	// Setup pulse clock timer interrupt
-	// Prescale /50 (100M/50 = 0.5 microseconds per tick)
-	// Therefore, the timer interval can range from 0.5 to 128 microseconds
-	// Depending on the reset value (255 to 0), current value = 50us
+	// Prescale /500 (100M/500 = 5 microseconds per tick)
+	// Period = 50us
 
 	TIM_ClockConfigTypeDef sClockSourceConfig;
 
@@ -124,6 +115,7 @@ uint8_t  IRrecv_isIdle ( )
 {
 	return (irparams.rcvstate == IR_STATE_IDLE || irparams.rcvstate == IR_STATE_STOP) ? 1 : 0;
 }
+
 //+=============================================================================
 // Restart the ISR state machine
 //
@@ -150,12 +142,12 @@ void  IRrecv_resume ( )
 // 1 if newval is equal, and 2 if newval is longer
 // Use a tolerance of 20%
 //
-int  IRrecv_compare (unsigned int oldval,  unsigned int newval)
-{
-	if      (newval < oldval * .8)  return 0 ;
-	else if (oldval < newval * .8)  return 2 ;
-	else                            return 1 ;
-}
+//int  IRrecv_compare (unsigned int oldval,  unsigned int newval)
+//{
+//	if      (newval < oldval * .8)  return 0 ;
+//	else if (oldval < newval * .8)  return 2 ;
+//	else                            return 1 ;
+//}
 
 //+=============================================================================
 // Use FNV hash algorithm: http://isthe.com/chongo/tech/comp/fnv/#FNV-param
@@ -163,25 +155,25 @@ int  IRrecv_compare (unsigned int oldval,  unsigned int newval)
 // Hopefully this code is unique for each button.
 // This isn't a "real" decoding, just an arbitrary value.
 //
-#define IR_FNV_PRIME_32 16777619
-#define IR_FNV_BASIS_32 2166136261
-
-long  IRrecv_decodeHash (ir_decode_results *results)
-{
-	long hash = IR_FNV_BASIS_32;
-
-	// Require at least 6 samples to prevent triggering on noise
-	if (results->rawlen < 6)  return 0 ;
-
-	for (int i = 1;  (i + 2) < results->rawlen;  i++) {
-		int value =  IRrecv_compare(results->rawbuf[i], results->rawbuf[i+2]);
-		// Add value into the hash
-		hash = (hash * IR_FNV_PRIME_32) ^ value;
-	}
-
-	results->value       = hash;
-	results->bits        = 32;
-	results->decode_type = UNKNOWN;
-
-	return 1;
-}
+//#define IR_FNV_PRIME_32 16777619
+//#define IR_FNV_BASIS_32 2166136261
+//
+//long  IRrecv_decodeHash (ir_decode_results *results)
+//{
+//	long hash = IR_FNV_BASIS_32;
+//
+//	// Require at least 6 samples to prevent triggering on noise
+//	if (results->rawlen < 6)  return 0 ;
+//
+//	for (int i = 1;  (i + 2) < results->rawlen;  i++) {
+//		int value =  IRrecv_compare(results->rawbuf[i], results->rawbuf[i+2]);
+//		// Add value into the hash
+//		hash = (hash * IR_FNV_PRIME_32) ^ value;
+//	}
+//
+//	results->value       = hash;
+//	results->bits        = 32;
+//	results->decode_type = UNKNOWN;
+//
+//	return 1;
+//}
