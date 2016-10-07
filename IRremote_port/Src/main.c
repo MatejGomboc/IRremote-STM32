@@ -62,15 +62,19 @@ int main(void)
 
 	while (1)
 	{
-		//IRsend_sendSony(0xF00, 12);
-		//HAL_Delay(10000); //1 second delay
+//		for (int i = 0; i < 3; i++)
+//		{
+//			IRsend_sendSony(0xF00, 12);
+//			HAL_Delay(4000); //400ms delay
+//		}
+//		HAL_Delay(50000); //5s delay
 
 		if (IRrecv_decode(&results))
 		{
 			xyz = results.value;
 		    IRrecv_resume(); // Receive the next value
 		}
-		HAL_Delay(1000); //1ms delay
+		HAL_Delay(1000); //1s delay
 	}
 
 	while(xyz);

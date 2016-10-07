@@ -107,13 +107,13 @@ void  IRrecv_enableIRIn()
 
 	if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
 	{
-	Error_Handler();
+		Error_Handler();
 	}
 
 	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
 	if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
 	{
-	Error_Handler();
+		Error_Handler();
 	}
 }
 
@@ -168,7 +168,7 @@ int  IRrecv_compare (unsigned int oldval,  unsigned int newval)
 
 long  IRrecv_decodeHash (ir_decode_results *results)
 {
-	long  hash = IR_FNV_BASIS_32;
+	long hash = IR_FNV_BASIS_32;
 
 	// Require at least 6 samples to prevent triggering on noise
 	if (results->rawlen < 6)  return 0 ;

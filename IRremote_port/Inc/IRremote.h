@@ -81,7 +81,7 @@ typedef struct
 	unsigned int           address;      // Used by Panasonic & Sharp [16-bits]
 	unsigned long          value;        // Decoded value [max 32-bits]
 	int                    bits;         // Number of bits in decoded value
-	volatile unsigned int  *rawbuf;      // Raw intervals in 50uS ticks
+	volatile unsigned int  *rawbuf;      // Raw intervals in 500uS ticks
 	int                    rawlen;       // Number of records in rawbuf
 	int                    overflow;     // true iff IR raw code too long
 } ir_decode_results;

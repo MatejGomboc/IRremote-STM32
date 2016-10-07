@@ -3882,7 +3882,7 @@ LOAD d:/ac6/systemworkbench/plugins/fr.ac6.mcu.externaltools.arm-none.win32_1.7.
                 0x00000485       0x22 d:/ac6/systemworkbench/plugins/fr.ac6.mcu.externaltools.arm-none.win32_1.7.0.201602121829/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.2.1/armv7e-m/fpu/crtn.o
 OUTPUT(IRremote_port.elf elf32-littlearm)
 
-.debug_line     0x00000000     0x875e
+.debug_line     0x00000000     0x8760
  .debug_line    0x00000000       0xae Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f411xe.o
  .debug_line    0x000000ae      0x7e1 Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.o
  .debug_line    0x0000088f      0x911 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
@@ -3894,10 +3894,10 @@ OUTPUT(IRremote_port.elf elf32-littlearm)
  .debug_line    0x00004fa8      0x843 Src/IRremote.o
  .debug_line    0x000057eb      0x88c Src/irRecv.o
  .debug_line    0x00006077      0x7e2 Src/ir_Sony.o
- .debug_line    0x00006859      0x7e7 Src/main.o
- .debug_line    0x00007040      0x789 Src/stm32f4xx_hal_msp.o
- .debug_line    0x000077c9      0x7f2 Src/stm32f4xx_it.o
- .debug_line    0x00007fbb      0x7a3 Src/tim.o
+ .debug_line    0x00006859      0x7e9 Src/main.o
+ .debug_line    0x00007042      0x789 Src/stm32f4xx_hal_msp.o
+ .debug_line    0x000077cb      0x7f2 Src/stm32f4xx_it.o
+ .debug_line    0x00007fbd      0x7a3 Src/tim.o
 
 .debug_info     0x00000000     0xa2cf
  .debug_info    0x00000000       0xb0 Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f411xe.o
