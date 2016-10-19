@@ -48,8 +48,9 @@ void IRsend_space (unsigned int time)
 //
 void IRsend_enableIROut (uint32_t khz)
 {
+	//TODO!!! ?
 	// Disable the TIM2 Interrupt (which is used for receiving IR)
-	HAL_NVIC_DisableIRQ(TIM2_IRQn);
+	//HAL_NVIC_DisableIRQ(TIM2_IRQn);
 
 	//------------------------------------------------------------------
 	// TIM3 initialization

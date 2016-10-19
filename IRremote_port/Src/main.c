@@ -48,37 +48,24 @@ int main(void)
 	/* Configure the system clock */
 	SystemClock_Config();
 
-	/* COMMENT THIS IF TRANSMITTING ! */
-	volatile unsigned long xyz = 0;
-	ir_decode_results results;
+
+	//IRsend_sendSony(0xF00, 12);
+	//HAL_Delay(10000); //1s delay
 
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	IRrecv_IRrecvInit(GPIOB, GPIO_PIN_4);
 	IRrecv_enableIRIn(); // Start the receiver
-	/* COMMENT THIS IF TRANSMITTING ! */
 
-	while (1)
+	while(1)
 	{
-		/* COMMENT THIS IF RECEIVING ! */
-//		for (int i = 0; i < 3; i++)
-//		{
-//			IRsend_sendSony(0xF00, 12);
-//			HAL_Delay(4000); //400ms delay
-//		}
-//		HAL_Delay(50000); //5s delay
-		/* COMMENT THIS IF RECEIVING ! */
-
-		/* COMMENT THIS IF TRANSMITTING ! */
-		if (IRrecv_decode(&results))
-		{
-			xyz = results.value;
-		    IRrecv_resume(); // Receive the next value
-		}
-		HAL_Delay(1000); //1s delay
-		/* COMMENT THIS IF TRANSMITTING ! */
+		IRsend_sendSony(0xF00, 12);
+		HAL_Delay(10000); //1000ms delay
 	}
+}
 
-	while(xyz); // To prevent compiler from optimizing it out, otherwise not necessary !
+void IRrecv_DataReadyCallback(unsigned long data)
+{
+	IRrecv_resume(); // Receive the next value
 }
 
 /** System Clock Configuration

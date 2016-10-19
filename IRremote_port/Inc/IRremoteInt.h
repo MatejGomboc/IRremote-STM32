@@ -54,7 +54,6 @@ typedef struct
 // Therefore we declare it as "volatile" to stop the compiler/CPU caching it
 extern volatile irparams_t irparams;
 
-
 //------------------------------------------------------------------------------
 // Pulse parms are ((X*50)-100) for the Mark and ((X*50)+100) for the Space.
 // First MARK is the one after the long gap

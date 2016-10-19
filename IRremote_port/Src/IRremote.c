@@ -20,12 +20,8 @@
 // Whynter A/C ARC-110WD added by Francesco Meschia
 //******************************************************************************
 
-// Defining IR_GLOBAL here allows us to declare the instantiation of global variables
-#define IR_GLOBAL
-#	include "IRremote.h"
-#	include "IRremoteInt.h"
-#undef IR_GLOBAL
-
+#include "IRremote.h"
+#include "IRremoteInt.h"
 #include "stm32f4xx_hal_tim.h"
 
 //+=============================================================================
@@ -77,7 +73,7 @@ int IR_MATCH_MARK (int measured_ticks,  int desired_us)
 	IR_DBG_PRINT(" <= ");
 	IR_DBG_PRINT_INT(IR_TICKS_HIGH(desired_us + IR_MARK_EXCESS) * IR_USECPERTICK);
 
-	uint8_t passed = ((measured_ticks >= IR_TICKS_LOW (desired_us + IR_MARK_EXCESS))
+	uint8_t passed = ((measured_ticks >= IR_TICKS_LOW(desired_us + IR_MARK_EXCESS))
 			&& (measured_ticks <= IR_TICKS_HIGH(desired_us + IR_MARK_EXCESS)));
 
 	if (passed)
@@ -105,7 +101,7 @@ int IR_MATCH_SPACE (int measured_ticks,  int desired_us)
 	IR_DBG_PRINT(" <= ");
 	IR_DBG_PRINT_INT(IR_TICKS_HIGH(desired_us - IR_MARK_EXCESS) * IR_USECPERTICK);
 
-	uint8_t passed = ((measured_ticks >= IR_TICKS_LOW (desired_us - IR_MARK_EXCESS))
+	uint8_t passed = ((measured_ticks >= IR_TICKS_LOW(desired_us - IR_MARK_EXCESS))
 			&& (measured_ticks <= IR_TICKS_HIGH(desired_us - IR_MARK_EXCESS)));
 
 	if (passed)
@@ -204,6 +200,13 @@ void IR_Recv_ISR ()
 		}
 		else if (irparams.blinkpin) HAL_GPIO_WritePin(irparams.blinkpinport, irparams.blinkpin, GPIO_PIN_RESET); // Turn user defined pin LED on
 	}
+
+	//DO DECODE !
+	if (IRrecv_decode(&irresults))
+	{
+		IRrecv_DataReadyCallback(irresults.value);
+	}
+	//////////
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)

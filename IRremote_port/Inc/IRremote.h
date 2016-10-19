@@ -25,7 +25,6 @@
 //------------------------------------------------------------------------------
 // Supported IR protocols
 //
-
 #define IR_DECODE_SONY          1
 #define IR_SEND_SONY            1
 
@@ -33,7 +32,6 @@
 // An enumerated list of all supported formats
 // You do NOT need to remove entries from this list when disabling protocols!
 //
-
 typedef enum
 {
 	UNKNOWN      = -1,
@@ -80,10 +78,11 @@ typedef struct
 	int                    overflow;     // true iff IR raw code too long
 } ir_decode_results;
 
+extern volatile ir_decode_results irresults;
+
 //------------------------------------------------------------------------------
 // Functions for receiving IR
 //
-
 extern void IRrecv_IRrecvInit (GPIO_TypeDef* recvpinport, uint16_t recvpin);
 extern void IRrecv_IRrecvInitBlink (GPIO_TypeDef* recvpinport, uint16_t recvpin, GPIO_TypeDef* blinkpinport, uint16_t blinkpin);
 
@@ -102,12 +101,12 @@ int   IRrecv_compare    (unsigned int oldval, unsigned int newval);
 #endif
 
 extern void IR_ISR (void);
+extern void IRrecv_DataReadyCallback(unsigned long data);
 
 
 //------------------------------------------------------------------------------
 // Functions for sending IR
 //
-
 extern void IRsend_enableIROut (uint32_t khz);
 extern void IRsend_mark        (unsigned int usec);
 extern void IRsend_space       (unsigned int usec);

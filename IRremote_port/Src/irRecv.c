@@ -10,13 +10,14 @@
 // NB. The data can be changed by the ISR at any time, even mid-function
 // Therefore we declare it as "volatile" to stop the compiler/CPU caching it
 volatile irparams_t irparams;
+volatile ir_decode_results irresults;
 
 //+=============================================================================
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
 // Results of decoding are stored in results
 //
-int IRrecv_decode (ir_decode_results *results)
+int IRrecv_decode (ir_decode_results* results)
 {
 	results->rawbuf   = irparams.rawbuf;
 	results->rawlen   = irparams.rawlen;
