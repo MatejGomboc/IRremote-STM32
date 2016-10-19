@@ -58,13 +58,13 @@ int main(void)
 
 	while(1)
 	{
-		IRsend_sendSony(0xF00, 12);
-		HAL_Delay(10000); //1000ms delay
 	}
 }
 
 void IRrecv_DataReadyCallback(unsigned long data)
 {
+	IRsend_sendSony(0xF00, 12);
+	HAL_Delay(10000); //1000ms delay
 	IRrecv_resume(); // Receive the next value
 }
 
